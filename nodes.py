@@ -96,3 +96,34 @@ def draft_response(state: EmailState) -> dict:
         "email_draft": draft
     }
 
+def categorize_email(state: EmailState) -> dict:
+    """Categorize a legitimate email."""
+
+    email = state["email"]
+
+    subject = email["subject"].lower()
+    body = email["body"].lower()
+
+    email_text = subject + " " + body
+
+    if any(word in email_text for word in ["invoice", "payment", "bank", "billing"]):
+        category = "Finance"
+
+    elif any(word in email_text for word in ["meeting", "project", "office", "work"]):
+        category = "Work"
+
+    elif any(word in email_text for word in ["help", "issue", "problem", "support"]):
+        category = "Support"
+
+    elif any(word in email_text for word in ["friend", "family", "birthday", "personal"]):
+        category = "Personal"
+
+    else:
+        category = "Other"
+
+    print(f"Email category: {category}")
+
+    return {
+        "email_category": category
+    }
+
